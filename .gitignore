@@ -1,0 +1,5 @@
+#exclude files uploaded
+uploaded_images/.
+
+#commit just stylus files, no css
+css/compiled/.
