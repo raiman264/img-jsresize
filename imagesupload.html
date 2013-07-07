@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <title>File API</title>
-<link rel="stylesheet" type="text/css" href="css/estilo.css">
+<link rel="stylesheet" type="text/css" href="css/compiled/estilo.css">
 
+<div class="fileButton">
+    <input type="file" multiple id="inputFile">
+    Buscar Archivo...
+</div>
 <div id="dropzone">
     
    <!-- <div class='thumb' ><img id="test" src=""><span class='button upload'>up</span></div>-->
@@ -10,6 +14,7 @@
 
 <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
 <script>
+
 var zone = document.getElementById('dropzone');
 
 if (typeof window.FileReader === 'undefined') {
@@ -18,15 +23,21 @@ if (typeof window.FileReader === 'undefined') {
  
 zone.ondragover = function () { this.className = 'hover'; return false; };
 zone.ondragend = function () { this.className = ''; return false; };
-zone.ondrop = function (e) {
+zone.ondrop = addFiles;
+
+function addFiles (e) {
     e.preventDefault();
 
-    
+    console.log(e);
       
-      console.log(e.dataTransfer.files);
 
-    for(var index = 0; index < e.dataTransfer.files.length; index++){
-        var file = e.dataTransfer.files[index];
+    if(e.dataTransfer !== undefined) //drop action
+        var list = e.dataTransfer.files;
+    else //input action
+        var list = e.target.files;
+
+    for(var index = 0; index < list.length; index++){
+        var file = list[index];
         var reader = new FileReader();
 
         reader.onload = readImg;
@@ -36,7 +47,7 @@ zone.ondrop = function (e) {
     }
 
     return false;
-};
+}
 
 function readImg(event) {
     console.log(event.target);
@@ -56,6 +67,7 @@ function readImg(event) {
   };
 
 $(function(){
+    $("#inputFile").change(addFiles);
     $(document).on("click",".upload",{},function(){
         var cont = $(this).parents(".thumb");
         console.log("up");

@@ -4,6 +4,7 @@ html, body
 
 body
 	background-color #565656
+	font-family Arial
 
 #dropzone 
 	border: 10px dashed #ccc; 
@@ -36,3 +37,24 @@ body
 		position: absolute
 		bottom 5px
 		left 5px
+
+.fileButton
+	border 1px solid #AAA
+	border-radius 10px
+	color #EFEFEF
+	cursor pointer
+	margin: 20px 20%
+	padding: 10px
+	position relative
+	text-align: center
+
+	input[type=file]
+		bottom 0
+		left 0
+		position absolute
+		right 0
+		top 0
+		opacity 0
+
+.fileButton:hover
+	border-color #fff
