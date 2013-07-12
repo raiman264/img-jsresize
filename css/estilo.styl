@@ -1,25 +1,84 @@
 html, body
 	width 100%
 	height 100%
+	margin 0;
+	position relative
 
 body
 	background-color #565656
 	font-family Arial
 
-#dropzone 
+.interactive_area
 	border: 10px dashed #ccc; 
-	width: 80%
-	height: 80%
+	width: 72%
+	height: 75%
 	margin: 10%
+	overflow-x: hidden;
+	overflow-y: auto;
 
-#dropzone.hover 
+
+.interactive_area.hover 
 	border: 10px dashed #333;
+
+
+.bigButton
+	border 1px solid #AAA
+	border-radius 10px
+	color #EFEFEF
+	cursor pointer
+	margin: 20px 20%
+	padding: 10px
+	position relative
+	text-align: center
+	
 
 .button
 	background-color #dcdcdc
 	border-radius 8px
-	padding 3px
 	cursor pointer
+	min-width 15px
+	padding 3px
+	text-align center
+
+/*colors ID http://www.colorschemedesigner.com/#3e41Tw0w0w0w0 */
+.color1
+	border-color #00A08A !important
+.color2
+	border-color #1049A8 !important
+.color3
+	border-color #FFA400 !important
+.color4
+	border-color #FF6A00 !important
+
+.file_manage
+	float left
+	height 100%
+	width 80%
+
+.folder_manage
+	float left
+	height 100%
+	width 20%
+
+.folder
+	border-radius 5px
+	float left
+	margin 5px
+	width 100px
+	height 100px
+	padding 0
+
+	.content
+		width 100%
+		height 100%
+		margin 0px
+
+		.image
+			width 45%
+			margin 0;
+
+.hide
+	display none
 
 .thumb
 	border 1px solid #efefef
@@ -29,25 +88,51 @@ body
 	
 	img
 		margin 5px;
-		width: 200px;
+		width: 125px;
+	
+	.button
+		position: absolute
+		bottom 5px
+
+	.facebook, .close
+		background-color blue
+		border-radius: 10px;
+		color white
+		display none
+		position absolute
+		left 5px
+		top 5px
+		text-align: center;
+		width: 20px;
+		height: 20px;
+	
+	.facebook.enable
+		display block
+
+	.close
+		left: auto;
+		right: 5px;
+		color red
+		background-color transparent
+		display block
+	.close:hover
+		background-color #fefefe
+
+	.info
+		background-color rgb(10, 137, 255);
+		color: #fff;
+		right 5px
 
 	.upload
 		background-color: #585;
 		color: #dcdcdc;
-		position: absolute
-		bottom 5px
 		left 5px
 
-.fileButton
-	border 1px solid #AAA
-	border-radius 10px
-	color #EFEFEF
-	cursor pointer
-	margin: 20px 20%
-	padding: 10px
-	position relative
-	text-align: center
+img.ui-draggable-dragging
+	z-index 99
+	width 30px
 
+.fileButton
 	input[type=file]
 		bottom 0
 		left 0
