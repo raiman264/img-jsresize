@@ -7,21 +7,29 @@ $data = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAA
 		// accept image data encoded
 
 		$data = $_POST['imgData'];
+		$file_name = 'test';
 
 		$data = explode(",",$data,2);
 		$type = strpos ( $data[0], "/")+1;
 		$type = substr($data[0],$type, strpos ( $data[0], ";",$type)-$type);
 
-		$save_path = "test/test.$type";
+		$save_path_o = "uploaded_images/{$file_name}_original.$type";
+		$save_path = "uploaded_images/{$file_name}.$type";
 
 		$data = base64_decode($data[1]);
 
-		$r = file_put_contents ( $save_path , $data);
+		//save original image
+		$r = file_put_contents ( $save_path_o , $data);
 
-		exit($r);
+		//exit($r);
 
+
+		// save image with logo
 		$im = imagecreatefromstring($data);
+		$logo = imagecreatefrompng("img/wmark_all.png");
 
+		//$s = imagecopymerge($im, $logo, 325, 375, 0, 0, 650, 150, 100);
+		imagecopy($im, $logo, 0, 0, 0, 0, 1300, 900);
 		
 
 		if ($im !== false) {
