@@ -15,19 +15,26 @@ body
 	padding 6px
 	border-radius 20px
 	background-color green
+	cursor pointer
 
-#progressbar
+.bar
 	position: absolute
 	bottom: 50%
 	left: 20%
 	right: 20%
 
-.ui-progressbar 
-	position: relative
+.overlay
+	position absolute
+	bottom 0
+	left 0
+	right 0
+	top 0
+	background-color rgba(0,0,0,0.5)
+
   
 .progress-label 
 	position: absolute
-	left: 50%
+	left: 40%
  	top: 4px
 	font-weight: bold
 	text-shadow: 1px 1px 0 #fff
@@ -114,6 +121,10 @@ body
 	img
 		margin 5px;
 		width: 125px;
+
+	.bar
+		height 10%
+		bottom 35%
 	
 	.button
 		position: absolute

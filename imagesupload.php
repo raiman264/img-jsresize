@@ -13,6 +13,11 @@
     <link rel="stylesheet" type="text/css" href="css/compiled/estilo.css">
     <link rel="stylesheet" type="text/css" href="css/vendors/overcast/jquery-ui.css">
     <meta charset="UTF-8">
+    <style>
+        .base{
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <span id="start_upload">Subir imágenes</span>
@@ -66,10 +71,13 @@
         </div>
     </div>
 
-    <div id="progressbar"><div class="progress-label">Loading...</div></div>
+    <div id="progressbar" class="overlay hide">
+        <div class="bar"><div class="progress-label">Loading...</div></div>
+    </div>
 
 <script type="text/javascript" src="js/vendors/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/vendors/jquery-ui-1.10.3.custom.js"></script>
+<script type="text/javascript" src="js/vendors/notify.min.js"></script>
 <script>
 
 var     zone = document.getElementById('dropzone');
@@ -112,6 +120,17 @@ function readImg(event) {
     var url = window.URL.createObjectURL(blob);
     //var thumb = $("<div class='thumb'><img class='image' src='"+url +"'><span class='button upload'>up</span></div>");
     var thumb = $("#dropzone .thumb.base").clone().removeClass("base");
+    thumb.data("info",{in_facebook:1,desc:''});
+    thumb.draggable({
+        revert: true,
+        cursorAt: { left: -15, top: -16 },
+        containment: $("body"),
+        helper:function(e){
+            var thumb = e.currentTarget;
+            return $(".image",thumb).clone();
+        }
+    });
+
     $("img",thumb)[0].src = url;
 
     $(".image",thumb)[0].onload = function(){
@@ -172,6 +191,11 @@ $(function(){
             ui.draggable.attr("title","Album: "+$(this).attr("title"));
             ui.draggable.attr("data-class",$(this).attr("data-class"));
             ui.draggable.addClass($(this).attr("data-class"));
+
+            ui.draggable.data("folder",{
+                name: $(this).attr("title"),
+                id: $(this).attr("data-id")
+            });
         }
     };
 
@@ -286,24 +310,75 @@ $(function(){
         if(!$(this).attr("disabled")){
             console.log("a subir");
 
-            var progressbar = $( "#progressbar" ),
-            progressLabel = $( ".progress-label" );
+            var progressbar = $( "#progressbar .bar" ),
+            progressLabel = $( "#progressbar .progress-label" );
+
+            $("#progressbar").show('medium');
     
 
+            var max = $("#dropzone .thumb").length-1;
             progressbar.progressbar({
               value: false,
+              max: max,
               change: function() {
-                progressLabel.text( progressbar.progressbar( "value" ) + "%" );
+                progressLabel.text( progressbar.progressbar( "value" ) + " de " + max );
               },
               complete: function() {
-                progressLabel.text( "Complete!" );
+                progressLabel.html( "Carga completada, <a href='#' onClick='window.location.reload()'>Cargar mas</a>" );
               }
             });
+
+            $("#dropzone .image").each(uploadImg);
         }
     });
 
     //$(document).on("load",".thumb .image",{},resizeImg);
 });
+
+function uploadImg(i,img){
+    console.log(arguments);
+    var $thumb = $(img).parents(".thumb");
+    var info = $thumb.data("info");
+
+    if($thumb.hasClass("base")){
+        return null;
+    }
+
+    console.log('upload',img);
+    $.ajax({
+        url: 'uploadImg.php',
+        cache: false,
+        context: $thumb[0],
+        data:{ imgData: $(img)[0].src, info:info, folder:$thumb.data("folder") },
+        beforeSend: function(){
+            $(this).append('<div class="bar"></div>');
+            $('.bar',this).progressbar({value:false});
+        },
+        complete:  function(e,status){
+            $('.bar',this).remove();
+            $( "#progressbar .bar" ).progressbar("value",$( "#progressbar .bar" ).progressbar("value")+1);
+                
+                if(status == "success"){
+                    $.notify("Archivo cargado correctamente ",
+                        {
+                            position:"top center",
+                            className:"success"
+                        }
+                    );
+                    $thumb.hide("slow",function(){ $thumb.remove(); });
+                }else{
+                    $.notify("Error al cargar ",
+                        {
+                            position:"top center",
+                            className:"error"
+                        }
+                    );
+                }
+        },
+        type: 'post'
+
+    });
+}
 
 function resizeImg(img){
     console.log('resize',arguments);
